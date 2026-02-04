@@ -2,6 +2,8 @@ const express = require('express');
 const config = require('./config');
 const VendingService = require('./vending-service');
 
+// HTTP layer responsible only for request/response handling.
+// All vending machine state and business rules live in VendingService.
 const app = express();
 const vm = new VendingService();
 
@@ -9,7 +11,7 @@ app.use(express.json());
 
 app.put('/', (req, res) => {
   const { coin } = req.body;
-  
+
   if (coin === config.MACHINE_SPECS.QUARTER_VALUE) {
     const updatedCredit = vm.insertCoin();
     res.set('X-Coins', updatedCredit).status(204).send();
@@ -39,6 +41,7 @@ app.get('/inventory/:id', (req, res) => {
 app.put('/inventory/:id', (req, res) => {
   const sale = vm.executeVend(req.params.id);
 
+  // Expose current credit or dispensed change via header to mimic hardware-style feedback
   res.set('X-Coins', sale.changeDispensed !== undefined ? sale.changeDispensed : sale.currentCredit);
 
   if (sale.success) {
@@ -50,5 +53,6 @@ app.put('/inventory/:id', (req, res) => {
 });
 
 app.listen(config.PORT, () => {
+  // Startup log kept minimal to avoid polluting production logs
   console.log(`Vend-O-Matic active on port ${config.PORT}`);
 });
