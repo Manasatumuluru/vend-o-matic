@@ -1,0 +1,13 @@
+{
+  "name": "vend-o-matic",
+  "version": "1.0.0",
+  "description": "Restful Vending Machine Service for Goodyear Lobby",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
